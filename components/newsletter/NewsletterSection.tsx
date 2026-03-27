@@ -63,21 +63,22 @@ export default function NewsletterSection() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Card */}
         <motion.div
-          className="relative bg-white/90 backdrop-blur-xl rounded-[50px] p-8 md:p-12 shadow-float border-4 border-white overflow-visible"
+          className="relative bg-white/90 backdrop-blur-xl rounded-[50px] p-8 md:p-12 shadow-float border-4 border-white"
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.6 }}
+          style={{ overflow: 'visible' }}
         >
           {/* Decorative corner clouds */}
           <motion.span
-            className="absolute -top-6 -left-6 text-6xl opacity-80"
+            className="absolute -top-6 -left-6 text-6xl opacity-80 pointer-events-none"
             animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
             transition={{ duration: 4, repeat: Infinity }}
           >
             ☁️
           </motion.span>
           <motion.span
-            className="absolute -top-4 -right-8 text-5xl opacity-60"
+            className="absolute -top-4 -right-8 text-5xl opacity-60 pointer-events-none"
             animate={{ y: [0, -8, 0], rotate: [0, -5, 0] }}
             transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
           >
@@ -118,9 +119,9 @@ export default function NewsletterSection() {
             </p>
           </motion.div>
 
-          {/* Veldora peeking - SHIFTED DOWN */}
+          {/* Veldora peeking */}
           <motion.div
-            className="absolute top-32 md:top-28 -right-2 md:right-6 z-20"
+            className="absolute top-32 md:top-28 -right-2 md:right-6 z-20 pointer-events-none"
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
             initial={{ opacity: 0, x: 20 }}
@@ -136,11 +137,11 @@ export default function NewsletterSection() {
               className={`
                 relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2
                 p-2 rounded-full
-                bg-white border-2
+                bg-white
                 transition-all duration-300
                 ${isFocused 
-                  ? 'border-sky-primary shadow-glow-magic' 
-                  : 'border-sky-200 shadow-cloud'
+                  ? 'ring-2 ring-sky-primary ring-inset shadow-[0_0_0_3px_rgba(135,206,235,0.1)]' 
+                  : 'ring-2 ring-sky-200 ring-inset shadow-cloud'
                 }
               `}
               animate={status === 'error' ? { x: [-10, 10, -10, 10, 0] } : {}}
@@ -195,7 +196,7 @@ export default function NewsletterSection() {
                   flex-shrink-0
                   ${status === 'success'
                     ? 'bg-accent-mint text-white'
-                    : 'bg-gradient-to-r from-sky-primary to-sky-azure text-white hover:shadow-glow-magic'
+                    : 'bg-gradient-to-r from-sky-primary to-sky-azure text-white hover:shadow-lg'
                   }
                 `}
                 whileHover={status === 'idle' && email ? { scale: 1.05 } : {}}
@@ -239,7 +240,7 @@ export default function NewsletterSection() {
             <AnimatePresence>
               {status === 'success' && (
                 <motion.div
-                  className="absolute top-0 left-1/2 text-4xl pointer-events-none"
+                  className="absolute top-0 left-1/2 text-4xl pointer-events-none z-50"
                   initial={{ opacity: 1, x: 0, y: 0 }}
                   animate={{ 
                     opacity: [1, 1, 0],
@@ -292,7 +293,7 @@ export default function NewsletterSection() {
 
           {/* Privacy Note */}
           <motion.p
-            className="text-center mt-6 text-sm text-gray-500 font-body flex items-center justify-center gap-2 flex-wrap"
+            className="text-center mt-6 text-sm text-gray-500 font-body flex items-center justify-center gap-2 flex-wrap px-4"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.5 }}
