@@ -63,7 +63,7 @@ export default function NewsletterSection() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Card */}
         <motion.div
-          className="relative bg-white/90 backdrop-blur-xl rounded-[50px] p-8 md:p-12 shadow-float border-4 border-white overflow-hidden"
+          className="relative bg-white/90 backdrop-blur-xl rounded-[50px] p-8 md:p-12 shadow-float border-4 border-white overflow-visible"
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.6 }}
@@ -134,7 +134,7 @@ export default function NewsletterSection() {
           <form onSubmit={handleSubmit} className="relative">
             <motion.div
               className={`
-                relative flex flex-col sm:flex-row gap-4
+                relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2
                 p-2 rounded-full
                 bg-white border-2
                 transition-all duration-300
@@ -147,7 +147,7 @@ export default function NewsletterSection() {
               transition={{ duration: 0.4 }}
             >
               {/* Email Input */}
-              <div className="flex-1 relative">
+              <div className="flex-1 relative min-h-[56px] flex items-center">
                 <input
                   type="email"
                   value={email}
@@ -157,9 +157,9 @@ export default function NewsletterSection() {
                   placeholder="your@email.cloud ☁️"
                   disabled={status === 'loading' || status === 'success'}
                   className="
-                    w-full px-6 py-4
+                    w-full h-full px-6 py-3
                     bg-transparent
-                    font-body text-lg
+                    font-body text-base sm:text-lg
                     placeholder:text-sky-300
                     focus:outline-none
                     disabled:opacity-50
@@ -170,7 +170,7 @@ export default function NewsletterSection() {
                 <AnimatePresence>
                   {isFocused && (
                     <motion.span
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xl"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none"
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0 }}
@@ -186,11 +186,13 @@ export default function NewsletterSection() {
                 type="submit"
                 disabled={status === 'loading' || status === 'success' || !email}
                 className={`
-                  px-8 py-4 rounded-full
-                  font-heading font-bold text-lg
+                  px-6 sm:px-8 py-3 sm:py-3.5 rounded-full
+                  font-heading font-bold text-base sm:text-lg
                   flex items-center justify-center gap-2
                   transition-all duration-300
                   disabled:opacity-50 disabled:cursor-not-allowed
+                  whitespace-nowrap
+                  flex-shrink-0
                   ${status === 'success'
                     ? 'bg-accent-mint text-white'
                     : 'bg-gradient-to-r from-sky-primary to-sky-azure text-white hover:shadow-glow-magic'
@@ -290,7 +292,7 @@ export default function NewsletterSection() {
 
           {/* Privacy Note */}
           <motion.p
-            className="text-center mt-6 text-sm text-gray-500 font-body flex items-center justify-center gap-2"
+            className="text-center mt-6 text-sm text-gray-500 font-body flex items-center justify-center gap-2 flex-wrap"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.5 }}
@@ -302,7 +304,7 @@ export default function NewsletterSection() {
 
           {/* Decorative bottom cloud */}
           <motion.span
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-8xl opacity-50"
+            className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-8xl opacity-50 pointer-events-none"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 4, repeat: Infinity }}
           >
