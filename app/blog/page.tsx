@@ -1,7 +1,8 @@
 // app/blog/page.tsx
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import PageLayout from '@/components/layout/PageLayout'
 import VeldoraMascot from '@/components/veldora/VeldoraMascot'
 
@@ -62,9 +63,31 @@ const blogPosts = [
   },
 ]
 
+type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
+
 export default function BlogPage() {
   const featuredPost = blogPosts.find(p => p.featured)
   const regularPosts = blogPosts.filter(p => !p.featured)
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<SubmitStatus>('idle')
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    setStatus('loading')
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    // Simulate success
+    setStatus('success')
+    setEmail('')
+    
+    // Reset after showing success
+    setTimeout(() => setStatus('idle'), 5000)
+  }
 
   return (
     <PageLayout
@@ -142,26 +165,173 @@ export default function BlogPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
+            style={{ overflow: 'visible' }}
           >
             <VeldoraMascot pose="waving" size="medium" />
             <h3 className="text-xl font-display text-sky-azure mt-4 mb-2">
               Never Miss an Update!
             </h3>
-            <p className="text-gray-600 mb-4">Subscribe to our newsletter for weekly dragon news</p>
-            <div className="flex max-w-md mx-auto gap-2">
-              <input
-                type="email"
-                placeholder="your@email.cloud"
-                className="flex-1 px-4 py-3 rounded-full border-2 border-sky-200 focus:border-sky-azure focus:outline-none"
-              />
-              <motion.button
-                className="bg-sky-azure text-white px-6 py-3 rounded-full font-heading"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <p className="text-gray-600 mb-6">Subscribe to our newsletter for weekly dragon news</p>
+            
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="relative max-w-md mx-auto">
+              <motion.div
+                className={`
+                  relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2
+                  p-2 rounded-full
+                  bg-white
+                  transition-all duration-300
+                  ${isFocused 
+                    ? 'ring-2 ring-sky-primary ring-inset shadow-[0_0_0_3px_rgba(135,206,235,0.1)]' 
+                    : 'ring-2 ring-sky-200 ring-inset shadow-cloud'
+                  }
+                `}
+                animate={status === 'error' ? { x: [-10, 10, -10, 10, 0] } : {}}
+                transition={{ duration: 0.4 }}
               >
-                Subscribe ✉️
-              </motion.button>
-            </div>
+                {/* Email Input */}
+                <div className="flex-1 relative min-h-[56px] flex items-center">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholder="your@email.cloud ☁️"
+                    disabled={status === 'loading' || status === 'success'}
+                    className="
+                      w-full h-full px-6 py-3
+                      bg-transparent
+                      font-body text-base sm:text-lg
+                      placeholder:text-sky-300
+                      focus:outline-none
+                      disabled:opacity-50
+                    "
+                  />
+
+                  {/* Input decorations */}
+                  <AnimatePresence>
+                    {isFocused && (
+                      <motion.span
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                      >
+                        ✨
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  type="submit"
+                  disabled={status === 'loading' || status === 'success' || !email}
+                  className={`
+                    px-6 sm:px-8 py-3 sm:py-3.5 rounded-full
+                    font-heading font-bold text-base sm:text-lg
+                    flex items-center justify-center gap-2
+                    transition-all duration-300
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    whitespace-nowrap
+                    flex-shrink-0
+                    ${status === 'success'
+                      ? 'bg-accent-mint text-white'
+                      : 'bg-gradient-to-r from-sky-primary to-sky-azure text-white hover:shadow-lg'
+                    }
+                  `}
+                  whileHover={status === 'idle' && email ? { scale: 1.05 } : {}}
+                  whileTap={status === 'idle' && email ? { scale: 0.95 } : {}}
+                >
+                  {status === 'idle' && (
+                    <>
+                      <span>Subscribe</span>
+                      <motion.span
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        ✉️
+                      </motion.span>
+                    </>
+                  )}
+                  {status === 'loading' && (
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    >
+                      ☁️
+                    </motion.span>
+                  )}
+                  {status === 'success' && (
+                    <>
+                      <span>Subscribed!</span>
+                      <span>✓</span>
+                    </>
+                  )}
+                  {status === 'error' && (
+                    <>
+                      <span>Try Again</span>
+                      <span>🔄</span>
+                    </>
+                  )}
+                </motion.button>
+              </motion.div>
+
+              {/* Flying envelope animation on success */}
+              <AnimatePresence>
+                {status === 'success' && (
+                  <motion.div
+                    className="absolute top-0 left-1/2 text-4xl pointer-events-none z-50"
+                    initial={{ opacity: 1, x: 0, y: 0 }}
+                    animate={{ 
+                      opacity: [1, 1, 0],
+                      x: [0, 100, 200],
+                      y: [0, -100, -200],
+                      rotate: [0, -15, -30],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5 }}
+                  >
+                    ✉️
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </form>
+
+            {/* Status Messages */}
+            <AnimatePresence mode="wait">
+              {status === 'success' && (
+                <motion.div
+                  className="mt-6 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <p className="font-heading text-accent-mint text-lg">
+                    🎉 Woohoo! Welcome to the cloud fam!
+                  </p>
+                  <p className="font-handwritten text-gray-500 mt-1">
+                    Check your inbox for a surprise from Veldora! ✨
+                  </p>
+                </motion.div>
+              )}
+              {status === 'error' && (
+                <motion.div
+                  className="mt-6 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <p className="font-heading text-accent-coral text-lg">
+                    😅 Oops! Something went wonky!
+                  </p>
+                  <p className="font-handwritten text-gray-500 mt-1">
+                    Veldora tripped over a cloud. Try again?
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </section>
