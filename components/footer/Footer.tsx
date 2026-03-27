@@ -77,11 +77,11 @@ const Footer = memo(function Footer() {
       {/* Easter Egg Modal - Fixed */}
       {showEasterEgg && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
           onClick={() => setShowEasterEgg(false)}
         >
           <div 
-            className="relative bg-white rounded-3xl p-10 shadow-2xl border-4 border-yellow-300 max-w-md mx-4"
+            className="relative bg-white rounded-3xl p-6 sm:p-10 shadow-2xl border-4 border-yellow-300 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Content */}
@@ -93,11 +93,11 @@ const Footer = memo(function Footer() {
                 bubbleText="You found the secret! 🎉✨"
               />
               
-              <h3 className="mt-6 text-3xl font-display text-gray-900">
+              <h3 className="mt-6 text-2xl sm:text-3xl font-display text-gray-900">
                 Congratulations! 🎊
               </h3>
               
-              <p className="text-xl font-heading text-sky-azure mt-3">
+              <p className="text-lg sm:text-xl font-heading text-sky-azure mt-3">
                 You are officially a dragon friend! 🐉💙
               </p>
               
@@ -118,10 +118,10 @@ const Footer = memo(function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
           {/* Logo & Description */}
           <motion.div
-            className="col-span-2 md:col-span-1"
+            className="col-span-1 sm:col-span-2 lg:col-span-1"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1 }}
@@ -132,13 +132,13 @@ const Footer = memo(function Footer() {
                 <span className="text-2xl font-display text-sky-azure">VELDORA</span>
               </div>
             </Link>
-            <p className="text-sm text-gray-600 font-body mb-4">
+            <p className="text-sm text-gray-600 font-body mb-4 max-w-xs">
               Where Dragons Play and Dreams Float Away ☁️✨
             </p>
             
             {/* Social Icons */}
-            <div className="flex gap-3">
-              {socialIcons.map((social, index) => (
+            <div className="flex gap-3 flex-wrap">
+              {socialIcons.map((social) => (
                 <Link 
                   key={social.name} 
                   href={social.href}
@@ -158,11 +158,12 @@ const Footer = memo(function Footer() {
           {Object.entries(footerLinks).map(([category, links], categoryIndex) => (
             <motion.div
               key={category}
+              className="col-span-1"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: categoryIndex * 0.1 + 0.2 }}
             >
-              <h4 className="font-display text-lg text-sky-azure mb-4 capitalize flex items-center gap-1">
+              <h4 className="font-display text-base sm:text-lg text-sky-azure mb-4 capitalize flex items-center gap-1">
                 {category}
                 <span>{categoryEmojis[category]}</span>
               </h4>
@@ -174,13 +175,13 @@ const Footer = memo(function Footer() {
                       target={'external' in link && link.external ? '_blank' : undefined}
                       rel={'external' in link && link.external ? 'noopener noreferrer' : undefined}
                     >
-                      <span className="text-gray-600 hover:text-sky-azure font-body text-sm transition-colors inline-flex items-center gap-1 group">
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-gray-600 hover:text-sky-azure font-body text-sm transition-colors inline-flex items-center gap-1 group break-words">
+                        <span className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                           ☁️
                         </span>
-                        {link.name}
+                        <span className="break-words">{link.name}</span>
                         {'external' in link && link.external && (
-                          <span className="text-xs opacity-50">↗</span>
+                          <span className="text-xs opacity-50 flex-shrink-0">↗</span>
                         )}
                       </span>
                     </Link>
@@ -201,19 +202,19 @@ const Footer = memo(function Footer() {
 
         {/* Bottom Bar */}
         <motion.div
-          className="text-center"
+          className="text-center px-4"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6 }}
         >
-          <p className="text-sm text-gray-500 font-body">
+          <p className="text-sm text-gray-500 font-body break-words">
             © 2024 Veldora. All rights reserved.
           </p>
         </motion.div>
 
         {/* Easter Egg Hint */}
         <motion.p
-          className="text-center mt-4 text-xs text-gray-400 font-handwritten cursor-pointer"
+          className="text-center mt-4 text-xs text-gray-400 font-handwritten cursor-pointer px-4"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 0.5 } : {}}
           transition={{ delay: 1 }}
